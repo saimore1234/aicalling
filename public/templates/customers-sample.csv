@@ -1,0 +1,8 @@
+Customer Name,Company,Phone,Email,Country,Timezone,Language,Product Interest,Category,Lead Source,Consent Status,Consent Source,Consent Date,Do Not Call,Notes
+Asha Verma,Verma Traders,+12025550143,asha.verma@example.com,US,America/New_York,en,Solar panels,SMB,Website form,granted,Website form checkbox,2026-09-01,no,Asked for a brochure
+Rahul Mehta,Mehta Logistics,+12025550144,rahul.mehta@example.com,US,America/Chicago,en,Fleet tracking,Mid-market,Trade show,granted,Trade show sign-up sheet,2026-08-20,no,
+Priya Nair,Nair Textiles,+442079460101,priya.nair@example.com,GB,Europe/London,en,Solar panels,SMB,Referral,unknown,,,no,
+Daniel Okoye,Okoye Foods,+442079460102,daniel.okoye@example.com,GB,Europe/London,en,Cold storage,SMB,Website form,granted,Website form checkbox,2026-09-15,no,Prefers email
+Meera Iyer,Iyer & Sons,,meera.iyer@example.com,IN,Asia/Kolkata,en,Fleet tracking,SMB,Webinar,granted,Webinar registration,2026-09-10,no,Email only - no phone supplied
+Karan Shah,Shah Pharma,,karan.shah@example.com,IN,Asia/Kolkata,hi,Cold storage,Enterprise,Referral,unknown,,,no,Email only - no phone supplied
+Lena Fischer,Fischer GmbH,+12025550145,lena.fischer@example.com,US,America/Los_Angeles,en,Solar panels,SMB,Website form,denied,Replied STOP,2026-09-18,yes,Asked not to be called

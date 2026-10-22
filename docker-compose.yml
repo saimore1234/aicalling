@@ -1,0 +1,89 @@
+# VMS Smart Calling — local / single-host deployment.
+#   cp .env.example .env     (then set APP_SECRET and POSTGRES_PASSWORD)
+#   docker compose up --build
+# Web: http://localhost:3000   Voice gateway: ws://localhost:8081/media-stream
+x-app: &app
+  build: .
+  env_file: .env
+  restart: unless-stopped
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+    redis:
+      condition: service_healthy
+  environment: &app-env
+    DATABASE_URL: postgresql://vms:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/vms_smart_calling
+    REDIS_URL: redis://redis:6379
+    UPLOAD_DIR: /app/uploads
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vms
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: vms_smart_calling
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vms -d vms_smart_calling"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: .
+    env_file: .env
+    environment:
+      <<: *app-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["sh", "-c", "npm run db:migrate && npm run db:seed"]
+    restart: "no"
+
+  web:
+    <<: *app
+    ports: ["3000:3000"]
+    volumes: ["uploads:/app/uploads"]
+    command: ["npm", "run", "start"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  worker:
+    <<: *app
+    volumes: ["uploads:/app/uploads"]
+    command: ["npm", "run", "worker"]
+
+  voice:
+    <<: *app
+    ports: ["8081:8081"]
+    command: ["npm", "run", "voice"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pgdata:
+  redisdata:
+  uploads:

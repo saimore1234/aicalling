@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 248 250 252;
+  --surface: 255 255 255;
+  --surface-2: 241 245 249;
+  --border: 226 232 240;
+  --text: 15 23 42;
+  --muted: 100 116 139;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: 11 15 25;
+    --surface: 17 24 39;
+    --surface-2: 30 41 59;
+    --border: 51 65 85;
+    --text: 241 245 249;
+    --muted: 148 163 184;
+  }
+}
+
+@layer base {
+  html { color-scheme: light dark; }
+  body { @apply bg-[rgb(var(--bg))] text-[rgb(var(--text))] antialiased; font-feature-settings: 'cv11', 'ss01'; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
+  ::selection { @apply bg-brand-200 text-brand-900; }
+}
+@layer components {
+  .card { @apply rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] shadow-sm; }
+  .muted { @apply text-[rgb(var(--muted))]; }
+  .input { @apply block w-full rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-2 text-sm placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 disabled:cursor-not-allowed disabled:opacity-60; }
+  .th { @apply px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]; }
+  .td { @apply px-3 py-2.5 text-sm align-middle; }
+}
